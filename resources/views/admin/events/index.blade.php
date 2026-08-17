@@ -40,7 +40,7 @@
                 <div class="flex items-center gap-5">
                     <a href="{{ route('home').'#komunitas' }}" target="_blank" class="font-mono text-[0.65rem] uppercase tracking-[0.2em] text-olive hover:text-ink">Lihat ↗</a>
                     <a href="{{ route('admin.events.edit', $event) }}" class="font-mono text-[0.65rem] uppercase tracking-[0.2em] text-olive hover:text-ink">Ubah</a>
-                    <form method="POST" action="{{ route('admin.events.destroy', $event) }}" onsubmit="return confirm('Hapus acara ini?')">
+                    <form method="POST" action="{{ route('admin.events.destroy', $event) }}" data-confirm="Hapus acara ini?">
                         @csrf
                         @method('DELETE')
                         <button type="submit" class="font-mono text-[0.65rem] uppercase tracking-[0.2em] text-coffee hover:text-ink">Hapus</button>

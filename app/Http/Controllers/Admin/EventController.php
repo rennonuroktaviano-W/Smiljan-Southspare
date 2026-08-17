@@ -15,7 +15,8 @@ class EventController extends Controller
         $query = Event::query();
 
         if ($search = $request->input('q')) {
-            $query->where('name', 'like', "%{$search}%");
+            $escaped = str_replace(['%', '_'], ['\\%', '\\_'], $search);
+            $query->whereRaw('name LIKE ? ESCAPE ?', ["%{$escaped}%", '\\']);
         }
 
         return view('admin.events.index', [
@@ -30,7 +31,9 @@ class EventController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
-        Event::create($this->validated($request));
+        $event = Event::create($this->validated($request));
+
+        activity()->performedOn($event)->event('created')->log('Acara "'.$event->name.'" ditambahkan');
 
         return redirect()->route('admin.events.index')->with('ok', 'Acara ditambahkan.');
     }
@@ -44,12 +47,17 @@ class EventController extends Controller
     {
         $event->update($this->validated($request));
 
+        activity()->performedOn($event)->event('updated')->log('Acara "'.$event->name.'" diperbarui');
+
         return redirect()->route('admin.events.index')->with('ok', 'Acara diperbarui.');
     }
 
     public function destroy(Event $event): RedirectResponse
     {
+        $name = $event->name;
         $event->delete();
+
+        activity()->event('deleted')->withProperties(['event_name' => $name])->log('Acara "'.$name.'" dihapus');
 
         return redirect()->route('admin.events.index')->with('ok', 'Acara dihapus.');
     }

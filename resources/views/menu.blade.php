@@ -7,18 +7,18 @@
     <section class="pt-32 lg:pt-44">
         <div class="wrap">
             <div class="flex items-baseline justify-between font-mono text-[0.62rem] uppercase tracking-[0.26em]">
-                <span class="text-olive" data-reveal>{{ config('site.coffee.index') }} / {{ config('site.coffee.label') }}</span>
-                <span class="hidden sm:inline" data-reveal>{{ config('site.coffee.en') }}</span>
+                <span class="text-olive" data-reveal>{{ siteSetting('coffee', 'index') }} / {{ siteSetting('coffee', 'label') }}</span>
+                <span class="hidden sm:inline" data-reveal>{{ siteSetting('coffee', 'en') }}</span>
             </div>
 
             <div class="mt-14 grid gap-8 lg:mt-20 lg:grid-cols-12 lg:items-end">
                 <h1 class="font-display text-[clamp(2.6rem,9vw,7.5rem)] leading-[0.9] tracking-[-0.01em] lg:col-span-8">
-                    @foreach (config('site.coffee.title') as $index => $line)
+                    @foreach (siteSetting('coffee.title') as $index => $line)
                         <span class="hero-line block whitespace-nowrap" style="--d: {{ 0.08 + $index * 0.11 }}s">{{ $line }}</span>
                     @endforeach
                 </h1>
                 <p class="max-w-sm text-[1.02rem] leading-relaxed text-ink/75 lg:col-span-4" data-reveal style="--d: 0.4s">
-                    {{ config('site.coffee.copy') }}
+                    {{ siteSetting('coffee', 'copy') }}
                 </p>
             </div>
         </div>
@@ -57,7 +57,7 @@
                 <aside class="lg:col-span-5 lg:pl-6">
                     <div class="lg:sticky lg:top-28">
                         <figure class="img-frame aspect-[3/4]" data-reveal>
-                            <img src="{{ asset(config('site.coffee.image.src')) }}" alt="{{ config('site.coffee.image.alt') }}" width="800" height="1067" loading="lazy" decoding="async">
+                            <img src="{{ asset(siteSetting('coffee', 'image.src')) }}" alt="{{ siteSetting('coffee', 'image.alt') }}" width="800" height="1067" loading="lazy" decoding="async">
                         </figure>
                         <figcaption class="mt-3 flex justify-between font-mono text-[0.58rem] uppercase tracking-[0.22em] text-olive">
                             <span>FIG. 01 — FILTER</span>

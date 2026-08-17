@@ -1,8 +1,8 @@
 <section id="jurnal">
     <div class="wrap py-28 lg:py-44">
         <div class="flex items-baseline justify-between font-mono text-[0.62rem] uppercase tracking-[0.26em]">
-            <span class="text-olive" data-reveal>{{ config('site.journal.index') }} / {{ config('site.journal.label') }}</span>
-            <span class="hidden sm:inline" data-reveal>{{ config('site.journal.en') }}</span>
+            <span class="text-olive" data-reveal>{{ siteSetting('journal', 'index') }} / {{ siteSetting('journal', 'label') }}</span>
+            <span class="hidden sm:inline" data-reveal>{{ siteSetting('journal', 'en') }}</span>
         </div>
 
         <div class="mt-14 grid gap-16 lg:mt-20 lg:grid-cols-12 lg:gap-x-10">

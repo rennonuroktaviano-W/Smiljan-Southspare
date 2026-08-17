@@ -49,7 +49,7 @@
                 <div class="flex items-center gap-5">
                     <a href="{{ route('menu') }}" target="_blank" class="font-mono text-[0.65rem] uppercase tracking-[0.2em] text-olive hover:text-ink">Lihat ↗</a>
                     <a href="{{ route('admin.menu.edit', $item) }}" class="font-mono text-[0.65rem] uppercase tracking-[0.2em] text-olive hover:text-ink">Ubah</a>
-                    <form method="POST" action="{{ route('admin.menu.destroy', $item) }}" onsubmit="return confirm('Hapus item ini?')">
+                    <form method="POST" action="{{ route('admin.menu.destroy', $item) }}" data-confirm="Hapus item ini?">
                         @csrf
                         @method('DELETE')
                         <button type="submit" class="font-mono text-[0.65rem] uppercase tracking-[0.2em] text-coffee hover:text-ink">Hapus</button>

@@ -75,7 +75,7 @@
             </main>
         </div>
 
-        <script>
+        <script nonce="{{ request()->attributes->get('csp_nonce', '') }}">
             document.addEventListener('DOMContentLoaded', () => {
                 const sidebar = document.querySelector('[data-sidebar]');
                 const overlay = document.querySelector('[data-sidebar-overlay]');

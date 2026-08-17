@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\MenuItem;
 use Illuminate\Contracts\View\View;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
@@ -15,9 +16,10 @@ class MenuItemController extends Controller
         $query = MenuItem::query();
 
         if ($search = $request->input('q')) {
-            $query->where(function ($q) use ($search) {
-                $q->where('name', 'like', "%{$search}%")
-                    ->orWhere('category', 'like', "%{$search}%");
+            $escaped = str_replace(['%', '_'], ['\\%', '\\_'], $search);
+            $query->where(function (Builder $q) use ($escaped) {
+                $q->whereRaw('name LIKE ? ESCAPE ?', ["%{$escaped}%", '\\'])
+                    ->orWhereRaw('category LIKE ? ESCAPE ?', ["%{$escaped}%", '\\']);
             });
         }
 
@@ -37,7 +39,9 @@ class MenuItemController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
-        MenuItem::create($this->validated($request));
+        $item = MenuItem::create($this->validated($request));
+
+        activity()->performedOn($item)->event('created')->log('Menu "'.$item->name.'" ditambahkan');
 
         return redirect()->route('admin.menu.index')->with('ok', 'Menu ditambahkan.');
     }
@@ -51,12 +55,17 @@ class MenuItemController extends Controller
     {
         $menuItem->update($this->validated($request));
 
+        activity()->performedOn($menuItem)->event('updated')->log('Menu "'.$menuItem->name.'" diperbarui');
+
         return redirect()->route('admin.menu.index')->with('ok', 'Menu diperbarui.');
     }
 
     public function destroy(MenuItem $menuItem): RedirectResponse
     {
+        $name = $menuItem->name;
         $menuItem->delete();
+
+        activity()->event('deleted')->withProperties(['menu_name' => $name])->log('Menu "'.$name.'" dihapus');
 
         return redirect()->route('admin.menu.index')->with('ok', 'Menu dihapus.');
     }

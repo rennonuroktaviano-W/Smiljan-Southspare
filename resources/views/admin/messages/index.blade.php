@@ -42,7 +42,7 @@
                             <button type="submit" class="font-mono text-[0.65rem] uppercase tracking-[0.2em] text-olive hover:text-ink">Tandai dibaca</button>
                         </form>
                     @endunless
-                    <form method="POST" action="{{ route('admin.messages.destroy', $message) }}" onsubmit="return confirm('Hapus pesan ini?')">
+                    <form method="POST" action="{{ route('admin.messages.destroy', $message) }}" data-confirm="Hapus pesan ini?">
                         @csrf
                         @method('DELETE')
                         <button type="submit" class="font-mono text-[0.65rem] uppercase tracking-[0.2em] text-coffee hover:text-ink">Hapus</button>

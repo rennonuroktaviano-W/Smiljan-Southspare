@@ -4,7 +4,7 @@
             <div class="lg:col-span-4">
                 <p class="font-display text-2xl leading-none">SMILJAN</p>
                 <p class="mt-3 font-mono text-[0.6rem] uppercase tracking-[0.3em] text-paper/60">
-                    {{ config('site.brand.sub') }}<br>CILANDAK<br>JAKARTA
+                    {{ siteSetting('brand', 'sub') }}<br>CILANDAK<br>JAKARTA
                 </p>
             </div>
 
@@ -28,7 +28,7 @@
 
             <nav class="lg:col-span-3" aria-label="Tautan eksternal">
                 <ul class="flex flex-col gap-4">
-                    @foreach (config('site.footer.links') as $link)
+                    @foreach (siteSetting('footer.links') as $link)
                         <li>
                             <a href="{{ $link['href'] }}" target="_blank" rel="noopener" class="link-line font-mono text-[0.72rem] uppercase tracking-[0.26em]">
                                 {{ $link['label'] }}
@@ -40,10 +40,10 @@
 
             <div class="lg:col-span-3">
                 <p class="font-mono text-[0.62rem] uppercase tracking-[0.26em] text-paper/60">
-                    {{ config('site.brand.coords') }}
+                    {{ siteSetting('brand', 'coords') }}
                 </p>
                 <p class="mt-4 font-mono text-[0.62rem] uppercase tracking-[0.26em] text-paper/60">
-                    {{ config('site.hours.open') }} — {{ config('site.hours.close') }}
+                    {{ siteSetting('hours', 'open') }} — {{ siteSetting('hours', 'close') }}
                 </p>
             </div>
         </div>
@@ -51,13 +51,13 @@
 
     <div class="relative">
         <p class="fade-text select-none text-center font-display text-[clamp(4.5rem,24vw,22rem)] leading-[0.82] tracking-[-0.02em]" aria-hidden="true">
-            {{ config('site.brand.name') }}
+            {{ siteSetting('brand', 'name') }}
         </p>
     </div>
 
     <div class="border-t hairline-light">
         <div class="wrap flex flex-col gap-2 py-6 font-mono text-[0.58rem] uppercase tracking-[0.22em] text-paper/55 sm:flex-row sm:items-center sm:justify-between">
-            <span>{{ config('site.brand.manifesto') }}</span>
+            <span>{{ siteSetting('brand', 'manifesto') }}</span>
             <span>© {{ date('Y') }} SOUTHSPARE</span>
         </div>
     </div>

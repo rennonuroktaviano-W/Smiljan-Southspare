@@ -8,7 +8,6 @@ use App\Models\MenuItem;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
@@ -17,6 +16,7 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->seedAdmin();
+        $this->seedSiteSettings();
         $this->seedArticles();
         $this->seedMenu();
         $this->seedEvents();
@@ -24,13 +24,18 @@ class DatabaseSeeder extends Seeder
 
     private function seedAdmin(): void
     {
-        User::updateOrCreate(
-            ['email' => env('ADMIN_EMAIL', 'admin@smiljan.southspare')],
+        User::firstOrCreate(
+            ['email' => mb_strtolower(trim((string) (config('admin.email') ?: 'admin@smiljan.southspare')))],
             [
                 'name' => 'Admin',
-                'password' => Hash::make(env('ADMIN_PASSWORD', 'smiljan123')),
+                'password' => config('admin.password') ?: 'smiljan123',
             ]
         );
+    }
+
+    private function seedSiteSettings(): void
+    {
+        $this->call(SiteSettingSeeder::class);
     }
 
     private function seedArticles(): void

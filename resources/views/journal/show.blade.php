@@ -4,21 +4,22 @@
 @section('meta-description', $article['excerpt'])
 
 @push('structured-data')
-<script type="application/ld+json">
-{
-    "@@context": "https://schema.org",
-    "@type": "BlogPosting",
-    "headline": "{{ $article['title'] }}",
-    "description": "{{ $article['excerpt'] }}",
-    "image": "{{ url($article['src']) }}",
-    "datePublished": "{{ $article['date']->toIso8601String() }}",
-    "mainEntityOfPage": "{{ url('/jurnal/'.$article['slug']) }}",
-    "publisher": {
-        "@type": "Organization",
-        "name": "{{ config('site.brand.name') }} {{ config('site.brand.sub') }}"
-    }
-}
-</script>
+@php
+    $articleSchema = [
+        '@context' => 'https://schema.org',
+        '@type' => 'BlogPosting',
+        'headline' => $article['title'],
+        'description' => $article['excerpt'],
+        'image' => url($article['src']),
+        'datePublished' => $article['date']->toIso8601String(),
+        'mainEntityOfPage' => url('/jurnal/' . $article['slug']),
+        'publisher' => [
+            '@type' => 'Organization',
+            'name' => config('site.brand.name') . ' ' . config('site.brand.sub'),
+        ],
+    ];
+@endphp
+<script type="application/ld+json">{!! json_encode($articleSchema, JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) !!}</script>
 @endpush
 
 @section('content')

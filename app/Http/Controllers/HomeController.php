@@ -5,10 +5,12 @@ namespace App\Http\Controllers;
 use App\Models\Article;
 use App\Models\Event;
 use App\Models\MenuItem;
+use Illuminate\Contracts\View\View;
+use Illuminate\Support\Collection;
 
 class HomeController extends Controller
 {
-    public function __invoke(): \Illuminate\Contracts\View\View
+    public function __invoke(): View
     {
         return view('home', [
             'articles' => Article::published()->orderBy('date', 'desc')->orderBy('sort_order')->get(),
@@ -17,7 +19,7 @@ class HomeController extends Controller
         ]);
     }
 
-    private function menuGroups(): \Illuminate\Support\Collection
+    private function menuGroups(): Collection
     {
         $items = MenuItem::published()->orderBy('sort_order')->get();
 

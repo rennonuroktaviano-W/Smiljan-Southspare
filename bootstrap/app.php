@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Middleware\EnsureTwoFactorVerified;
+use App\Http\Middleware\ForceHttps;
+use App\Http\Middleware\SecurityHeaders;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -12,7 +15,15 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        $middleware->append(\App\Http\Middleware\SecurityHeaders::class);
+        $middleware->append(ForceHttps::class);
+        $middleware->append(SecurityHeaders::class);
+
+        $middleware->alias([
+            'two_factor' => EnsureTwoFactorVerified::class,
+        ]);
+
+        $middleware->redirectGuestsTo(fn () => route('admin.login'));
+        $middleware->redirectUsersTo(fn () => route('admin.dashboard'));
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(

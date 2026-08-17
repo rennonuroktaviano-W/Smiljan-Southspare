@@ -48,7 +48,7 @@
                     <a href="{{ route('admin.articles.edit', $article) }}" class="font-mono text-[0.65rem] uppercase tracking-[0.2em] text-olive hover:text-ink">
                         Ubah
                     </a>
-                    <form method="POST" action="{{ route('admin.articles.destroy', $article) }}" onsubmit="return confirm('Hapus artikel ini?')">
+                    <form method="POST" action="{{ route('admin.articles.destroy', $article) }}" data-confirm="Hapus artikel ini?">
                         @csrf
                         @method('DELETE')
                         <button type="submit" class="font-mono text-[0.65rem] uppercase tracking-[0.2em] text-coffee hover:text-ink">

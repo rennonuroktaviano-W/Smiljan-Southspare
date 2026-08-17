@@ -1,0 +1,85 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: development
+    container_name: smiljan-app
+    restart: unless-stopped
+    working_dir: /var/www
+    volumes:
+      - .:/var/www
+      - ./vendor:/var/www/vendor
+    networks:
+      - smiljan
+
+  nginx:
+    image: nginx:alpine
+    container_name: smiljan-nginx
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+    volumes:
+      - .:/var/www
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - app
+    networks:
+      - smiljan
+
+  mysql:
+    image: mysql:8.0
+    container_name: smiljan-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: smiljan_southspare
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_USER: smiljan
+      MYSQL_PASSWORD: secret
+    ports:
+      - "3306:3306"
+    volumes:
+      - smiljan_mysql_data:/var/lib/mysql
+    networks:
+      - smiljan
+
+  queue:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: development
+    container_name: smiljan-queue
+    restart: unless-stopped
+    working_dir: /var/www
+    command: php artisan queue:work --sleep=3 --tries=3 --max-time=3600
+    volumes:
+      - .:/var/www
+    depends_on:
+      - app
+      - mysql
+    networks:
+      - smiljan
+
+  scheduler:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: development
+    container_name: smiljan-scheduler
+    restart: unless-stopped
+    working_dir: /var/www
+    command: >
+      sh -c "while true; do php artisan schedule:run --verbose --no-interaction & sleep 60; done"
+    volumes:
+      - .:/var/www
+    depends_on:
+      - app
+      - mysql
+    networks:
+      - smiljan
+
+volumes:
+  smiljan_mysql_data:
+
+networks:
+  smiljan:

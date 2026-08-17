@@ -1,7 +1,7 @@
 @php
     $onHome = request()->routeIs('home');
     $navLinks = $onHome
-        ? config('site.nav.items')
+        ? siteSetting('nav.items')
         : [
             ['label' => 'Jurnal',  'href' => route('journal.index')],
             ['label' => 'Menu',    'href' => route('menu')],
@@ -26,11 +26,11 @@
                 >{{ $item['label'] }}</a>
             @endforeach
             <span class="h-4 w-px bg-ink/15" aria-hidden="true"></span>
-            <span class="font-mono text-[0.62rem] uppercase tracking-[0.24em] text-olive">{{ config('site.brand.area') }}</span>
+            <span class="font-mono text-[0.62rem] uppercase tracking-[0.24em] text-olive">{{ siteSetting('brand', 'area') }}</span>
         </nav>
 
         <div class="flex items-center gap-5">
-            <div class="flex items-center gap-2.5" data-status data-open="{{ config('site.hours.open') }}" data-close="{{ config('site.hours.close') }}">
+            <div class="flex items-center gap-2.5" data-status data-open="{{ siteSetting('hours', 'open') }}" data-close="{{ siteSetting('hours', 'close') }}">
                 <span class="status-dot" aria-hidden="true"></span>
                 <span class="font-mono text-[0.62rem] uppercase tracking-[0.18em] whitespace-nowrap" data-status-text>—</span>
             </div>
@@ -73,8 +73,8 @@
         </nav>
 
         <div class="menu-item flex items-center justify-between border-t hairline-light pt-5 font-mono text-[0.6rem] uppercase tracking-[0.22em] text-paper/60" style="--d: 0.42s">
-            <span>{{ config('site.brand.area') }}</span>
-            <span>{{ config('site.brand.coords') }}</span>
+            <span>{{ siteSetting('brand', 'area') }}</span>
+            <span>{{ siteSetting('brand', 'coords') }}</span>
         </div>
     </div>
 </div>

@@ -3,11 +3,14 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-#[Fillable(['name', 'email', 'message', 'is_read'])]
+#[Fillable(['name', 'email', 'message'])]
 class Message extends Model
 {
+    use HasFactory;
+
     protected function casts(): array
     {
         return [

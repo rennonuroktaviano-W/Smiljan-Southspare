@@ -15,6 +15,12 @@
                 <span class="mt-1 font-mono text-[0.6rem] tracking-[0.32em] text-olive">SOUTHSPARE / ADMIN</span>
             </a>
 
+            @if (session('two_factor'))
+                <div class="mt-8 border border-wood/40 bg-wood/5 p-4 text-center text-[0.85rem] text-coffee">
+                    {{ session('two_factor') }}
+                </div>
+            @endif
+
             @if ($errors->any())
                 <div class="mt-8 border border-coffee/30 bg-coffee/5 p-4 text-[0.85rem] text-coffee" role="alert">
                     @foreach ($errors->all() as $error)

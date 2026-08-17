@@ -7,10 +7,11 @@ use App\Models\Article;
 use App\Models\Event;
 use App\Models\MenuItem;
 use App\Models\Message;
+use Illuminate\Contracts\View\View;
 
 class DashboardController extends Controller
 {
-    public function __invoke(): \Illuminate\Contracts\View\View
+    public function __invoke(): View
     {
         return view('admin.dashboard', [
             'articles' => Article::count(),

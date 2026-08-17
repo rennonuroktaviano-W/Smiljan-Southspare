@@ -107,6 +107,22 @@ php artisan serve
 | Email | `admin@smiljan.southspare` |
 | Password | `smiljan123` |
 
+Password admin hanya dibuat saat akun belum ada. Menjalankan `php artisan db:seed`
+lagi tidak akan menimpa password admin yang sudah diubah.
+
+Untuk membuat password baru dari terminal:
+
+```bash
+php artisan admin:reset-password
+```
+
+Salin persis nilai **Password Baru** yang tampil. Untuk menentukan password
+sendiri (minimal 8 karakter), gunakan:
+
+```bash
+php artisan admin:reset-password --password="PasswordBaru-2026"
+```
+
 ## Arsitektur
 
 ### Content-in-Config

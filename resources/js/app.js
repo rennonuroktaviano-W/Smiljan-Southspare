@@ -318,3 +318,24 @@ if (sidebarToggle && sidebar) {
         }
     });
 }
+
+// ---------------------------------------------------------------- data-confirm forms
+document.querySelectorAll('[data-confirm]').forEach((el) => {
+    el.addEventListener('submit', (e) => {
+        if (!confirm(el.dataset.confirm)) e.preventDefault();
+    });
+});
+
+// ---------------------------------------------------------------- image upload preview
+document.querySelectorAll('[data-upload]').forEach((wrap) => {
+    const input = wrap.querySelector('input[type="file"]');
+    const preview = wrap.querySelector('[data-upload-preview]');
+    if (!input || !preview) return;
+
+    input.addEventListener('change', () => {
+        const file = input.files[0];
+        if (!file) { preview.innerHTML = ''; return; }
+        const url = URL.createObjectURL(file);
+        preview.innerHTML = '<img src="' + url + '" alt="Preview" class="max-h-48 rounded border border-ink/10">';
+    });
+});

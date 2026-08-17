@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Article;
 use Illuminate\Contracts\View\View;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -16,9 +17,10 @@ class ArticleController extends Controller
         $query = Article::query();
 
         if ($search = $request->input('q')) {
-            $query->where(function ($q) use ($search) {
-                $q->where('title', 'like', "%{$search}%")
-                    ->orWhere('category', 'like', "%{$search}%");
+            $escaped = str_replace(['%', '_'], ['\\%', '\\_'], $search);
+            $query->where(function (Builder $q) use ($escaped) {
+                $q->whereRaw('title LIKE ? ESCAPE ?', ["%{$escaped}%", '\\'])
+                    ->orWhereRaw('category LIKE ? ESCAPE ?', ["%{$escaped}%", '\\']);
             });
         }
 
@@ -38,7 +40,9 @@ class ArticleController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
-        Article::create($this->validated($request));
+        $article = Article::create($this->validated($request));
+
+        activity()->performedOn($article)->event('created')->log('Artikel "'.$article->title.'" ditambahkan');
 
         return redirect()->route('admin.articles.index')->with('ok', 'Artikel ditambahkan.');
     }
@@ -52,12 +56,17 @@ class ArticleController extends Controller
     {
         $article->update($this->validated($request));
 
+        activity()->performedOn($article)->event('updated')->log('Artikel "'.$article->title.'" diperbarui');
+
         return redirect()->route('admin.articles.index')->with('ok', 'Artikel diperbarui.');
     }
 
     public function destroy(Article $article): RedirectResponse
     {
+        $title = $article->title;
         $article->delete();
+
+        activity()->event('deleted')->withProperties(['article_title' => $title])->log('Artikel "'.$title.'" dihapus');
 
         return redirect()->route('admin.articles.index')->with('ok', 'Artikel dihapus.');
     }
