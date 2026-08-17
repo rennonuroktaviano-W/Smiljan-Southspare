@@ -38,14 +38,16 @@
 
             <div class="lg:col-span-7" data-reveal>
                 <div class="relative">
-                    <div class="img-frame map-panel aspect-[4/3] lg:aspect-[16/10]">
-                        <img src="{{ asset(config('site.visit.image.src')) }}" alt="{{ config('site.visit.image.alt') }}" width="1400" height="875" loading="lazy" decoding="async">
-                        <div class="map-grid pointer-events-none absolute inset-0" aria-hidden="true"></div>
-                        <span class="map-pin" aria-hidden="true"></span>
-                        <span class="absolute bottom-5 left-5 font-mono text-[0.6rem] uppercase tracking-[0.24em] text-paper">
-                            {{ config('site.brand.coords') }}
-                        </span>
-                    </div>
+                    <a href="{{ config('site.address.maps_url') }}" target="_blank" rel="noopener" class="block" data-cursor>
+                        <div class="img-frame map-panel aspect-[4/3] lg:aspect-[16/10]">
+                            <img src="{{ asset(config('site.visit.image.src')) }}" alt="{{ config('site.visit.image.alt') }}" width="1400" height="875" loading="lazy" decoding="async">
+                            <div class="map-grid pointer-events-none absolute inset-0" aria-hidden="true"></div>
+                            <span class="map-pin" aria-hidden="true"></span>
+                            <span class="absolute bottom-5 left-5 font-mono text-[0.6rem] uppercase tracking-[0.24em] text-paper">
+                                {{ config('site.brand.coords') }}
+                            </span>
+                        </div>
+                    </a>
                     <figcaption class="mt-3 flex justify-between font-mono text-[0.58rem] uppercase tracking-[0.22em] text-olive">
                         <span>JAKARTA SELATAN / CILANDAK BARAT</span>
                         <span>TRANSPORTASI UMUM</span>

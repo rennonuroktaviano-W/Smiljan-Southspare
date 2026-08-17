@@ -30,11 +30,15 @@
                 @error('description')<p class="mt-2 font-mono text-[0.62rem] uppercase tracking-[0.2em] text-coffee">{{ $message }}</p>@enderror
             </div>
 
-            <div class="grid grid-cols-3 gap-6">
+            <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
                 <div>
                     <label for="status" class="mb-2 block font-mono text-[0.6rem] uppercase tracking-[0.24em] text-olive">Status</label>
-                    <input id="status" name="status" type="text" required value="{{ old('status', $event->status ?? 'Segera') }}"
+                    <select id="status" name="status" required
                         class="w-full border-b border-ink/15 bg-transparent pb-2 text-[0.95rem] focus:border-wood focus:outline-none">
+                        @foreach (['Segera', 'Berlangsung', 'Selesai', 'Dibatalkan'] as $opt)
+                            <option value="{{ $opt }}" @selected(old('status', $event->status ?? 'Segera') === $opt)>{{ $opt }}</option>
+                        @endforeach
+                    </select>
                 </div>
                 <div>
                     <label for="event_date" class="mb-2 block font-mono text-[0.6rem] uppercase tracking-[0.24em] text-olive">Tanggal (opsional)</label>

@@ -21,7 +21,9 @@ Route::get('/menu', MenuController::class)->name('menu');
 Route::get('/tentang', fn () => view('about'))->name('about');
 
 Route::get('/kontak', ContactController::class)->name('contact');
-Route::post('/kontak', [ContactController::class, 'store'])->name('contact.store');
+Route::post('/kontak', [ContactController::class, 'store'])
+    ->middleware('throttle:10,1')
+    ->name('contact.store');
 
 Route::get('/sitemap.xml', function () {
     return response()
@@ -29,14 +31,12 @@ Route::get('/sitemap.xml', function () {
         ->header('Content-Type', 'application/xml');
 })->name('sitemap');
 
-Route::middleware('guest')->group(function () {
-    Route::get('/login', [AuthController::class, 'login'])->name('login');
-});
-
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::middleware('guest')->group(function () {
         Route::get('/login', [AuthController::class, 'login'])->name('login');
-        Route::post('/login', [AuthController::class, 'authenticate'])->name('authenticate');
+        Route::post('/login', [AuthController::class, 'authenticate'])
+            ->middleware('throttle:5,1')
+            ->name('authenticate');
     });
 
     Route::middleware('auth')->group(function () {

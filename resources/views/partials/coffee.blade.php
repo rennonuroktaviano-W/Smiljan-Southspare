@@ -22,7 +22,7 @@
                         </div>
                         <ul class="mt-3">
                             @foreach ($category['items'] as $item)
-                                <li class="flex items-baseline gap-4 border-b border-ink/10 py-3.5 last:border-b-0">
+                                <li class="flex items-baseline gap-4 border-b border-ink/10 py-3.5 last:border-b-0 transition-colors duration-300 hover:bg-ink/[.02]">
                                     <span class="font-display text-[1.3rem] leading-none lg:text-[1.55rem]">{{ $item['name'] }}</span>
                                     <span class="hidden flex-1 border-b border-dotted border-ink/20 sm:block" aria-hidden="true"></span>
                                     <span class="max-w-[12rem] text-right text-[0.78rem] leading-snug text-ink/65">{{ $item['desc'] }}</span>
@@ -37,7 +37,7 @@
             </div>
 
             <aside class="lg:col-span-5 lg:pl-6">
-                <div class="lg:sticky lg:top-28" data-reveal>
+                <div class="lg:sticky lg:top-28" data-reveal data-tilt>
                     <figure class="img-frame aspect-[3/4]">
                         <img src="{{ asset(config('site.coffee.image.src')) }}" alt="{{ config('site.coffee.image.alt') }}" width="800" height="1067" loading="lazy" decoding="async">
                     </figure>

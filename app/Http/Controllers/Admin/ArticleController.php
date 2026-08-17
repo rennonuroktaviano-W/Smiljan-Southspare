@@ -11,10 +11,23 @@ use Illuminate\Support\Str;
 
 class ArticleController extends Controller
 {
-    public function index(): View
+    public function index(Request $request): View
     {
+        $query = Article::query();
+
+        if ($search = $request->input('q')) {
+            $query->where(function ($q) use ($search) {
+                $q->where('title', 'like', "%{$search}%")
+                    ->orWhere('category', 'like', "%{$search}%");
+            });
+        }
+
+        if ($request->filled('status')) {
+            $query->where('published', $request->input('status') === 'published');
+        }
+
         return view('admin.articles.index', [
-            'articles' => Article::orderBy('date', 'desc')->get(),
+            'articles' => $query->orderBy('date', 'desc')->paginate(15)->withQueryString(),
         ]);
     }
 
@@ -62,11 +75,13 @@ class ArticleController extends Controller
             'image_alt' => ['required', 'string', 'max:160'],
             'content' => ['required', 'string'],
             'published' => ['nullable', 'boolean'],
+            'sort_order' => ['nullable', 'integer', 'min:0'],
         ]);
 
         $data['slug'] = ($data['slug'] ?? null) ?: Str::slug($data['title']);
         $data['content'] = $this->textToBlocks($data['content']);
         $data['published'] = $request->boolean('published');
+        $data['sort_order'] = (int) ($data['sort_order'] ?? 0);
 
         return $data;
     }

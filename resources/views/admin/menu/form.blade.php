@@ -16,7 +16,7 @@
         @endif
 
         <div class="flex flex-col gap-7">
-            <div class="grid grid-cols-2 gap-6">
+            <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
                 <div>
                     <label for="category" class="mb-2 block font-mono text-[0.6rem] uppercase tracking-[0.24em] text-olive">Kategori</label>
                     <input id="category" name="category" type="text" required value="{{ old('category', $item->category ?? '') }}"
@@ -44,7 +44,7 @@
                 @error('description')<p class="mt-2 font-mono text-[0.62rem] uppercase tracking-[0.2em] text-coffee">{{ $message }}</p>@enderror
             </div>
 
-            <div class="grid grid-cols-2 gap-6">
+            <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
                 <div>
                     <label for="price" class="mb-2 block font-mono text-[0.6rem] uppercase tracking-[0.24em] text-olive">Harga (Rp)</label>
                     <input id="price" name="price" type="number" min="0" step="500" required value="{{ old('price', $item->price ?? '') }}"

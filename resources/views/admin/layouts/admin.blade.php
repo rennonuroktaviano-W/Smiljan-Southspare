@@ -6,11 +6,15 @@
         <meta name="robots" content="noindex, nofollow">
         <title>@yield('title', 'Admin') — SMILJAN SOUTHSPARE</title>
 
-        @vite(['resources/css/app.css'])
+        @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
     <body class="min-h-screen bg-paper">
         <div class="flex min-h-screen">
-            <aside class="flex w-60 flex-col border-r border-ink/10 bg-bg p-6 lg:w-64">
+            {{-- Mobile overlay --}}
+            <div class="fixed inset-0 z-30 bg-ink/40 hidden lg:hidden" data-sidebar-overlay></div>
+
+            {{-- Sidebar --}}
+            <aside class="admin-sidebar flex w-60 flex-col border-r border-ink/10 bg-bg p-6 lg:w-64 lg:translate-x-0" data-sidebar>
                 <a href="{{ route('admin.dashboard') }}" class="flex flex-col leading-none">
                     <span class="font-display text-[1.3rem] tracking-tight">SMILJAN</span>
                     <span class="mt-1 font-mono text-[0.55rem] tracking-[0.32em] text-olive">SOUTHSPARE / ADMIN</span>
@@ -43,20 +47,51 @@
                 </div>
             </aside>
 
-            <main class="flex-1 overflow-x-hidden p-6 lg:p-12">
-                <header class="mb-10 flex flex-wrap items-baseline justify-between gap-4">
+            <main class="flex-1 overflow-x-hidden p-4 sm:p-6 lg:p-12 page-enter">
+                {{-- Mobile header --}}
+                <header class="mb-6 flex items-center gap-4 lg:mb-10 lg:hidden">
+                    <button type="button" class="flex flex-col gap-1 p-2" data-sidebar-toggle aria-label="Buka menu">
+                        <span class="block h-px w-5 bg-ink"></span>
+                        <span class="block h-px w-4 bg-ink"></span>
+                        <span class="block h-px w-3 bg-ink"></span>
+                    </button>
+                    <h1 class="font-display text-[1.5rem] leading-none">@yield('title')</h1>
+                </header>
+
+                {{-- Desktop header --}}
+                <header class="mb-10 hidden flex-wrap items-baseline justify-between gap-4 lg:flex">
                     <h1 class="font-display text-[2rem] leading-none lg:text-[2.6rem]">@yield('title')</h1>
                     @yield('header-actions')
                 </header>
 
                 @if (session('ok'))
-                    <div class="mb-8 border border-wood/40 bg-wood/5 p-4 text-[0.9rem] text-coffee">
-                        {{ session('ok') }}
+                    <div class="flash-msg mb-8 flex items-center justify-between border border-wood/40 bg-wood/5 p-4 text-[0.9rem] text-coffee" role="alert">
+                        <span>{{ session('ok') }}</span>
+                        <button type="button" class="ml-4 text-olive hover:text-ink" data-flash-close aria-label="Tutup">&times;</button>
                     </div>
                 @endif
 
                 @yield('content')
             </main>
         </div>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                const sidebar = document.querySelector('[data-sidebar]');
+                const overlay = document.querySelector('[data-sidebar-overlay]');
+                const toggle = document.querySelector('[data-sidebar-toggle]');
+
+                if (toggle && sidebar && overlay) {
+                    toggle.addEventListener('click', () => {
+                        sidebar.classList.toggle('is-open');
+                        overlay.classList.toggle('hidden');
+                    });
+                    overlay.addEventListener('click', () => {
+                        sidebar.classList.remove('is-open');
+                        overlay.classList.add('hidden');
+                    });
+                }
+            });
+        </script>
     </body>
 </html>

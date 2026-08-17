@@ -10,10 +10,16 @@ use Illuminate\Http\Request;
 
 class EventController extends Controller
 {
-    public function index(): View
+    public function index(Request $request): View
     {
+        $query = Event::query();
+
+        if ($search = $request->input('q')) {
+            $query->where('name', 'like', "%{$search}%");
+        }
+
         return view('admin.events.index', [
-            'events' => Event::orderBy('sort_order')->get(),
+            'events' => $query->orderBy('sort_order')->paginate(15)->withQueryString(),
         ]);
     }
 

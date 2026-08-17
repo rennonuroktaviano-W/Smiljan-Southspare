@@ -6,16 +6,24 @@
         <meta name="robots" content="noindex, nofollow">
         <title>Masuk — SMILJAN ADMIN</title>
 
-        @vite(['resources/css/app.css'])
+        @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
     <body class="flex min-h-screen items-center justify-center bg-bg px-6">
-        <div class="w-full max-w-sm">
+        <div class="w-full max-w-sm page-enter">
             <a href="{{ route('home') }}" class="flex flex-col items-center leading-none">
                 <span class="font-display text-[2rem] tracking-tight">SMILJAN</span>
                 <span class="mt-1 font-mono text-[0.6rem] tracking-[0.32em] text-olive">SOUTHSPARE / ADMIN</span>
             </a>
 
-            <form method="POST" action="{{ route('admin.authenticate') }}" class="mt-12">
+            @if ($errors->any())
+                <div class="mt-8 border border-coffee/30 bg-coffee/5 p-4 text-[0.85rem] text-coffee" role="alert">
+                    @foreach ($errors->all() as $error)
+                        <p>{{ $error }}</p>
+                    @endforeach
+                </div>
+            @endif
+
+            <form method="POST" action="{{ route('admin.authenticate') }}" class="mt-10" autocomplete="on">
                 @csrf
 
                 <div class="flex flex-col gap-7">
@@ -48,6 +56,13 @@
                             autocomplete="current-password"
                             class="w-full border-b border-ink/15 bg-transparent pb-2 font-display text-[1.3rem] leading-none placeholder:text-ink/35 focus:border-wood focus:outline-none"
                         >
+                    </div>
+
+                    <div class="flex items-center justify-between">
+                        <label class="flex cursor-pointer items-center gap-2 text-[0.85rem] text-olive">
+                            <input type="checkbox" name="remember" value="1" class="accent-wood">
+                            Ingat saya
+                        </label>
                     </div>
 
                     <button type="submit" class="link-line inline-flex w-fit items-center gap-3 font-mono text-[0.75rem] uppercase tracking-[0.26em]">

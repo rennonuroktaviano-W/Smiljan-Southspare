@@ -23,7 +23,7 @@
 
         @php($items = config('site.space.items'))
         <div class="mt-16 grid gap-x-6 gap-y-14 lg:mt-24 lg:grid-cols-12">
-            <figure class="lg:col-span-8" data-reveal>
+            <figure class="lg:col-span-8" data-reveal data-tilt>
                 <div class="img-frame aspect-[4/3]">
                     <img src="{{ asset($items[0]['src']) }}" alt="{{ $items[0]['alt'] }}" width="1200" height="900" loading="lazy" decoding="async">
                 </div>
@@ -36,7 +36,7 @@
                 </figcaption>
             </figure>
 
-            <figure class="lg:col-span-4 lg:mt-28" data-reveal>
+            <figure class="lg:col-span-4 lg:mt-28" data-reveal data-tilt>
                 <div class="img-frame aspect-[3/4]">
                     <img src="{{ asset($items[1]['src']) }}" alt="{{ $items[1]['alt'] }}" width="800" height="1067" loading="lazy" decoding="async">
                 </div>
@@ -49,7 +49,7 @@
                 </figcaption>
             </figure>
 
-            <figure class="lg:col-span-5 lg:-mt-24" data-reveal>
+            <figure class="lg:col-span-5 lg:-mt-24" data-reveal data-tilt>
                 <div class="img-frame aspect-[4/3]">
                     <img src="{{ asset($items[2]['src']) }}" alt="{{ $items[2]['alt'] }}" width="800" height="600" loading="lazy" decoding="async">
                 </div>
@@ -62,7 +62,7 @@
                 </figcaption>
             </figure>
 
-            <figure class="lg:col-span-7 lg:-mt-10" data-reveal>
+            <figure class="lg:col-span-7 lg:-mt-10" data-reveal data-tilt>
                 <div class="img-frame aspect-[16/9]">
                     <img src="{{ asset($items[3]['src']) }}" alt="{{ $items[3]['alt'] }}" width="1200" height="675" loading="lazy" decoding="async">
                 </div>

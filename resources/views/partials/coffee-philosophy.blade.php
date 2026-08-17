@@ -1,7 +1,7 @@
 <section class="bg-ink text-paper">
     <div class="wrap py-28 lg:py-40">
         <div class="grid gap-12 lg:grid-cols-12 lg:items-center">
-            <div class="relative order-2 lg:order-1 lg:col-span-5">
+            <div class="relative order-2 lg:order-1 lg:col-span-5" data-tilt>
                 <figure class="img-frame aspect-[3/4]">
                     <img src="{{ asset(config('site.coffee_philosophy.image.src')) }}" alt="{{ config('site.coffee_philosophy.image.alt') }}" width="800" height="1067" loading="lazy" decoding="async">
                 </figure>

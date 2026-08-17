@@ -21,7 +21,7 @@
             </div>
 
             <div class="lg:col-span-6">
-                <figure class="img-frame aspect-[4/5]" data-reveal style="--d: 0.15s">
+                <figure class="img-frame aspect-[4/5]" data-reveal style="--d: 0.15s" data-tilt>
                     <img src="{{ asset(config('site.books.image.src')) }}" alt="{{ config('site.books.image.alt') }}" width="800" height="1000" loading="lazy" decoding="async">
                 </figure>
                 <figcaption class="mt-3 flex justify-between font-mono text-[0.58rem] uppercase tracking-[0.22em] text-olive">

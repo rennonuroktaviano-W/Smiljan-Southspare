@@ -14,9 +14,9 @@
 
         <div class="mt-16 border-t hairline lg:mt-24">
             @foreach ($events as $index => $event)
-                <article class="group grid gap-2 border-b hairline py-8 transition-colors duration-500 hover:bg-bg/50 lg:grid-cols-12 lg:items-baseline lg:gap-6" data-reveal>
-                    <span class="font-mono text-[0.68rem] uppercase tracking-[0.22em] text-olive lg:col-span-2">{{ str_pad($index + 1, 3, '0', STR_PAD_LEFT) }}</span>
-                    <h3 class="font-display text-[1.7rem] leading-none lg:col-span-4 lg:text-[2.1rem] transition-transform duration-500 group-hover:translate-x-2">
+                <article class="group grid gap-2 border-b hairline py-8 transition-all duration-500 hover:bg-bg/50 hover:pl-4 lg:grid-cols-12 lg:items-baseline lg:gap-6" data-reveal>
+                    <span class="font-mono text-[0.68rem] uppercase tracking-[0.22em] text-olive lg:col-span-2 transition-colors duration-500 group-hover:text-wood">{{ str_pad($index + 1, 3, '0', STR_PAD_LEFT) }}</span>
+                    <h3 class="font-display text-[1.7rem] leading-none lg:col-span-4 lg:text-[2.1rem] transition-transform duration-500 group-hover:translate-x-3">
                         {{ $event['name'] }}
                     </h3>
                     <p class="max-w-xs text-[0.9rem] leading-relaxed text-ink/65 lg:col-span-5">{{ $event['description'] }}</p>

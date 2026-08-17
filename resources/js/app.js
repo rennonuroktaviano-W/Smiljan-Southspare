@@ -3,6 +3,46 @@ document.documentElement.classList.add('js');
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const finePointer = window.matchMedia('(pointer: fine)').matches;
 
+// ---------------------------------------------------------------- loading screen
+const loader = document.querySelector('.loader');
+const loaderCounter = document.querySelector('.loader-counter');
+
+if (loader) {
+    let progress = 0;
+    const target = 100;
+    const duration = 1600;
+    const startTime = performance.now();
+
+    const animate = (now) => {
+        const elapsed = now - startTime;
+        progress = Math.min(target, Math.round((elapsed / duration) * target));
+        if (loaderCounter) loaderCounter.textContent = String(progress).padStart(3, '0');
+        if (progress < target) requestAnimationFrame(animate);
+    };
+    requestAnimationFrame(animate);
+
+    const dismiss = () => {
+        loader.classList.add('is-done');
+        document.body.classList.remove('overflow-hidden');
+    };
+
+    window.addEventListener('load', () => {
+        const remaining = duration - (performance.now() - startTime);
+        setTimeout(dismiss, Math.max(remaining, 400));
+    });
+
+    setTimeout(dismiss, 3000);
+    document.body.classList.add('overflow-hidden');
+}
+
+// ---------------------------------------------------------------- film grain
+if (!reducedMotion) {
+    const grain = document.createElement('div');
+    grain.className = 'grain';
+    grain.setAttribute('aria-hidden', 'true');
+    document.body.appendChild(grain);
+}
+
 // ---------------------------------------------------------------- custom cursor
 const cursor = document.querySelector('.cursor-dot');
 
@@ -54,12 +94,32 @@ if (menuBtn && menu) {
         menu.setAttribute('aria-hidden', String(!open));
         menuBtn.setAttribute('aria-expanded', String(open));
         document.body.classList.toggle('overflow-hidden', open);
+
+        if (open) {
+            const firstLink = menu.querySelector('a');
+            if (firstLink) setTimeout(() => firstLink.focus(), 300);
+        }
     };
 
     menuBtn.addEventListener('click', () => setOpen(!menu.classList.contains('is-open')));
     menu.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => setOpen(false)));
     addEventListener('keydown', (e) => {
         if (e.key === 'Escape') setOpen(false);
+    });
+
+    // focus trap
+    menu.addEventListener('keydown', (e) => {
+        if (e.key !== 'Tab' || !menu.classList.contains('is-open')) return;
+        const focusable = menu.querySelectorAll('a, button, [tabindex]');
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        if (e.shiftKey && document.activeElement === first) {
+            e.preventDefault();
+            last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+            e.preventDefault();
+            first.focus();
+        }
     });
 }
 
@@ -96,12 +156,19 @@ if (hero && !reducedMotion) {
     let tx = 0;
     let ty = 0;
     let progress = 0;
+    let heroVisible = true;
 
     hero.addEventListener('pointermove', (e) => {
         const r = hero.getBoundingClientRect();
         tx = ((e.clientX - r.left) / r.width - 0.5) * 2;
         ty = ((e.clientY - r.top) / r.height - 0.5) * 2;
     }, { passive: true });
+
+    const heroIO = new IntersectionObserver(
+        ([entry]) => { heroVisible = entry.isIntersecting; },
+        { threshold: 0 }
+    );
+    heroIO.observe(hero);
 
     const sync = () => {
         const r = hero.getBoundingClientRect();
@@ -112,16 +179,38 @@ if (hero && !reducedMotion) {
     sync();
 
     const tick = () => {
-        mx += (tx - mx) * 0.06;
-        my += (ty - my) * 0.06;
+        if (heroVisible) {
+            mx += (tx - mx) * 0.06;
+            my += (ty - my) * 0.06;
 
-        if (wrap) wrap.style.transform = `translate3d(${mx * 14}px, ${my * 12 - progress * 60}px, 0)`;
-        if (heroImg) heroImg.style.transform = `scale(${1 + progress * 0.05})`;
-        if (title) title.style.transform = `translateY(${progress * 70}px)`;
-
+            if (wrap) wrap.style.transform = `translate3d(${mx * 14}px, ${my * 12 - progress * 60}px, 0)`;
+            if (heroImg) heroImg.style.transform = `scale(${1 + progress * 0.05})`;
+            if (title) title.style.transform = `translateY(${progress * 70}px)`;
+        }
         requestAnimationFrame(tick);
     };
     tick();
+}
+
+// ---------------------------------------------------------------- 3D tilt on images
+if (finePointer && !reducedMotion) {
+    document.querySelectorAll('[data-tilt]').forEach((el) => {
+        const frame = el.querySelector('.img-frame');
+        if (!frame) return;
+
+        el.addEventListener('pointermove', (e) => {
+            const r = el.getBoundingClientRect();
+            const x = (e.clientX - r.left) / r.width;
+            const y = (e.clientY - r.top) / r.height;
+            const rotateX = (y - 0.5) * -8;
+            const rotateY = (x - 0.5) * 8;
+            frame.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.02)`;
+        });
+
+        el.addEventListener('pointerleave', () => {
+            frame.style.transform = '';
+        });
+    });
 }
 
 // ---------------------------------------------------------------- magnetic links
@@ -184,4 +273,48 @@ if (statusBox && statusText) {
 
     update();
     setInterval(update, 60000);
+}
+
+// ---------------------------------------------------------------- back to top
+const backToTop = document.querySelector('.back-to-top');
+
+if (backToTop) {
+    const toggleBackToTop = () => {
+        backToTop.classList.toggle('is-visible', scrollY > 600);
+    };
+    addEventListener('scroll', toggleBackToTop, { passive: true });
+    toggleBackToTop();
+
+    backToTop.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+}
+
+// ---------------------------------------------------------------- admin flash dismiss
+document.querySelectorAll('.flash-msg').forEach((el) => {
+    const dismiss = () => {
+        el.classList.add('is-dismiss');
+        setTimeout(() => el.remove(), 300);
+    };
+
+    const closeBtn = el.querySelector('[data-flash-close]');
+    if (closeBtn) closeBtn.addEventListener('click', dismiss);
+
+    setTimeout(dismiss, 5000);
+});
+
+// ---------------------------------------------------------------- admin sidebar toggle
+const sidebarToggle = document.querySelector('[data-sidebar-toggle]');
+const sidebar = document.querySelector('.admin-sidebar');
+
+if (sidebarToggle && sidebar) {
+    sidebarToggle.addEventListener('click', () => {
+        sidebar.classList.toggle('is-open');
+    });
+
+    document.addEventListener('click', (e) => {
+        if (sidebar.classList.contains('is-open') && !sidebar.contains(e.target) && e.target !== sidebarToggle) {
+            sidebar.classList.remove('is-open');
+        }
+    });
 }

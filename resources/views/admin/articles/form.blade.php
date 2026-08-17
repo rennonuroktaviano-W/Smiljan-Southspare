@@ -27,7 +27,7 @@
                 @error('title')<p class="mt-2 font-mono text-[0.62rem] uppercase tracking-[0.2em] text-coffee">{{ $message }}</p>@enderror
             </div>
 
-            <div class="grid grid-cols-2 gap-6">
+            <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
                 <div>
                     <label for="category" class="mb-2 block font-mono text-[0.6rem] uppercase tracking-[0.24em] text-olive">Kategori</label>
                     <input id="category" name="category" type="text" required value="{{ old('category', $article->category ?? '') }}"
@@ -52,7 +52,7 @@
                     class="w-full resize-none border-b border-ink/15 bg-transparent pb-2 text-[0.95rem] leading-snug focus:border-wood focus:outline-none">{{ old('excerpt', $article->excerpt ?? '') }}</textarea>
             </div>
 
-            <div class="grid grid-cols-2 gap-6">
+            <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
                 <div>
                     <label for="date" class="mb-2 block font-mono text-[0.6rem] uppercase tracking-[0.24em] text-olive">Tanggal</label>
                     <input id="date" name="date" type="date" required value="{{ old('date', $article?->date?->toDateString() ?? now()->toDateString()) }}"
@@ -83,7 +83,7 @@
                 @error('content')<p class="mt-2 font-mono text-[0.62rem] uppercase tracking-[0.2em] text-coffee">{{ $message }}</p>@enderror
             </div>
 
-            <div class="grid grid-cols-2 gap-6">
+            <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
                 <div>
                     <label for="image_src" class="mb-2 block font-mono text-[0.6rem] uppercase tracking-[0.24em] text-olive">Gambar (path)</label>
                     <input id="image_src" name="image_src" type="text" required value="{{ old('image_src', $article->image_src ?? '') }}"

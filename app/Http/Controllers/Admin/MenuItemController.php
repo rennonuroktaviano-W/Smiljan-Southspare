@@ -10,10 +10,23 @@ use Illuminate\Http\Request;
 
 class MenuItemController extends Controller
 {
-    public function index(): View
+    public function index(Request $request): View
     {
+        $query = MenuItem::query();
+
+        if ($search = $request->input('q')) {
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                    ->orWhere('category', 'like', "%{$search}%");
+            });
+        }
+
+        if ($request->filled('type')) {
+            $query->where('is_coffee', $request->input('type') === 'coffee');
+        }
+
         return view('admin.menu.index', [
-            'items' => MenuItem::orderBy('sort_order')->get(),
+            'items' => $query->orderBy('sort_order')->paginate(15)->withQueryString(),
         ]);
     }
 

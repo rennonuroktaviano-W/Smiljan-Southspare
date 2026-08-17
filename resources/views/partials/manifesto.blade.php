@@ -18,7 +18,7 @@
         </div>
 
         <div class="relative mt-20 overflow-hidden lg:mt-32" data-reveal>
-            <span class="outline-text block whitespace-nowrap font-display text-[clamp(3.5rem,17vw,16rem)] leading-[0.85]" aria-hidden="true">
+            <span class="outline-text block whitespace-nowrap font-display text-[clamp(3.5rem,17vw,16rem)] leading-[0.85] parallax-text" data-text-shift aria-hidden="true">
                 {{ config('site.manifesto.accent.id') }}
             </span>
             <span class="absolute bottom-6 right-0 font-mono text-[0.65rem] uppercase tracking-[0.28em] text-wood">

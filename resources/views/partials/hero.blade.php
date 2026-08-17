@@ -9,7 +9,7 @@
             <div class="lg:col-span-7">
                 <h1 class="font-display text-[clamp(2.75rem,13.5vw,12.5rem)] leading-[0.86] tracking-[-0.02em]">
                     @foreach (config('site.hero.lines') as $index => $line)
-                        <span class="hero-line whitespace-nowrap" style="--d: {{ 0.08 + $index * 0.11 }}s">{{ $line }}</span>
+                        <span class="hero-line" style="--d: {{ 0.3 + $index * 0.11 }}s">{{ $line }}</span>
                     @endforeach
                 </h1>
 
@@ -18,7 +18,7 @@
                 </p>
             </div>
 
-            <div class="lg:col-span-5 lg:pt-6" data-reveal style="--d: 0.35s">
+            <div class="lg:col-span-5 lg:pt-6" data-reveal style="--d: 0.35s" data-tilt>
                 <figure class="img-frame aspect-[3/4]" data-parallax>
                     <img
                         src="{{ asset(config('site.hero.image.src')) }}"
