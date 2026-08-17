@@ -14,7 +14,7 @@
                 </h2>
                 <p class="mt-8 max-w-md text-[1rem] leading-relaxed text-ink/75" data-reveal>{{ config('site.coffee.copy') }}</p>
 
-                @foreach (config('site.coffee.categories') as $category)
+                @foreach ($menuGroups->where('is_coffee', true) as $category)
                     <section class="mt-14 border-t pt-6 hairline" data-reveal>
                         <div class="flex items-baseline justify-between gap-4">
                             <h3 class="font-mono text-[0.75rem] uppercase tracking-[0.28em]">{{ $category['name'] }}</h3>

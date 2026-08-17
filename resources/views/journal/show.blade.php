@@ -3,6 +3,24 @@
 @section('title', $article['title'] . ' — SMILJAN SOUTHSPARE')
 @section('meta-description', $article['excerpt'])
 
+@push('structured-data')
+<script type="application/ld+json">
+{
+    "@@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "{{ $article['title'] }}",
+    "description": "{{ $article['excerpt'] }}",
+    "image": "{{ url($article['src']) }}",
+    "datePublished": "{{ $article['date']->toIso8601String() }}",
+    "mainEntityOfPage": "{{ url('/jurnal/'.$article['slug']) }}",
+    "publisher": {
+        "@type": "Organization",
+        "name": "{{ config('site.brand.name') }} {{ config('site.brand.sub') }}"
+    }
+}
+</script>
+@endpush
+
 @section('content')
     <article class="pt-32 lg:pt-44">
         <div class="wrap">

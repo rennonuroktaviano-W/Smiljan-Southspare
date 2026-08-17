@@ -28,7 +28,7 @@
         <div class="wrap">
             <div class="mt-16 grid gap-14 lg:mt-24 lg:grid-cols-12">
                 <div class="lg:col-span-7">
-                    @foreach (config('site.coffee.categories') as $category)
+                    @foreach ($groups as $category)
                         <section class="border-t pt-6 hairline" data-reveal>
                             <div class="flex items-baseline justify-between gap-4">
                                 <h2 class="font-mono text-[0.75rem] uppercase tracking-[0.28em]">{{ $category['name'] }}</h2>
@@ -50,7 +50,7 @@
                     @endforeach
 
                     <p class="mt-8 font-mono text-[0.58rem] uppercase tracking-[0.22em] text-olive" data-reveal>
-                        HARGA SUDAH TERMASUK PAJAK · MENU NON-KOPI MENYUSUL
+                        HARGA SUDAH TERMASUK PAJAK
                     </p>
                 </div>
 

@@ -7,6 +7,13 @@
         <meta name="theme-color" content="#e9e4d8">
         <title>SMILJAN SOUTHSPARE — Kopi, Buku &amp; Hari yang Lebih Pelan</title>
 
+        @php
+            $pageTitle = 'SMILJAN SOUTHSPARE — Kopi, Buku & Hari yang Lebih Pelan';
+            $pageDescription = 'Kopi, buku, ruang dan komunitas di selatan Jakarta. Smiljan Southspare — Jl. BDN 1, Cilandak Barat, Jakarta Selatan. Buka setiap hari 08:00—22:00.';
+            $pageImage = url('/images/hero-cafe.webp');
+        @endphp
+        @include('partials.seo', compact('pageTitle', 'pageDescription', 'pageImage'))
+
         <link rel="preload" as="image" href="{{ asset('images/hero-cafe.webp') }}" fetchpriority="high">
 
         @fonts

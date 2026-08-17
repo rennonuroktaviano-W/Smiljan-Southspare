@@ -46,7 +46,74 @@
                 </div>
 
                 <div class="lg:col-span-5 lg:col-start-8">
-                    <div class="border-t pt-6 hairline" data-reveal>
+                    <form method="POST" action="{{ route('contact.store') }}" class="border-t pt-6 hairline" data-reveal>
+                        @csrf
+
+                        <p class="font-mono text-[0.6rem] uppercase tracking-[0.24em] text-olive">Tinggalkan pesan</p>
+
+                        @if (session('sent'))
+                            <div class="mt-5 border border-wood/40 bg-wood/5 p-4 text-[0.9rem] leading-relaxed text-coffee">
+                                Terima kasih, pesanmu sudah sampai. Kami balas pelan-pelan — dalam 1—2 hari.
+                            </div>
+                        @endif
+
+                        <div class="mt-6 flex flex-col gap-6">
+                            <div>
+                                <label for="name" class="sr-only">Nama</label>
+                                <input
+                                    id="name"
+                                    name="name"
+                                    type="text"
+                                    value="{{ old('name') }}"
+                                    placeholder="Nama"
+                                    required
+                                    autocomplete="name"
+                                    class="w-full border-b border-ink/15 bg-transparent pb-2 font-display text-[1.4rem] leading-none placeholder:text-ink/35 focus:border-wood focus:outline-none"
+                                >
+                                @error('name')
+                                    <p class="mt-2 font-mono text-[0.62rem] uppercase tracking-[0.2em] text-coffee">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <div>
+                                <label for="email" class="sr-only">Email</label>
+                                <input
+                                    id="email"
+                                    name="email"
+                                    type="email"
+                                    value="{{ old('email') }}"
+                                    placeholder="Email"
+                                    required
+                                    autocomplete="email"
+                                    class="w-full border-b border-ink/15 bg-transparent pb-2 font-display text-[1.4rem] leading-none placeholder:text-ink/35 focus:border-wood focus:outline-none"
+                                >
+                                @error('email')
+                                    <p class="mt-2 font-mono text-[0.62rem] uppercase tracking-[0.2em] text-coffee">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <div>
+                                <label for="message" class="sr-only">Pesan</label>
+                                <textarea
+                                    id="message"
+                                    name="message"
+                                    rows="4"
+                                    placeholder="Pesan"
+                                    required
+                                    class="w-full resize-none border-b border-ink/15 bg-transparent pb-2 font-display text-[1.2rem] leading-snug placeholder:text-ink/35 focus:border-wood focus:outline-none"
+                                >{{ old('message') }}</textarea>
+                                @error('message')
+                                    <p class="mt-2 font-mono text-[0.62rem] uppercase tracking-[0.2em] text-coffee">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <button type="submit" class="link-line inline-flex w-fit items-center gap-3 font-mono text-[0.75rem] uppercase tracking-[0.26em]" data-magnetic>
+                                Kirim pesan <span aria-hidden="true">→</span>
+                            </button>
+                        </div>
+                    </form>
+
+                    <div class="mt-12 border-t pt-6 hairline" data-reveal>
                         <p class="font-mono text-[0.6rem] uppercase tracking-[0.24em] text-olive">{{ config('site.visit.hours_label') }}</p>
                         <p class="mt-3 font-display text-[2.1rem] leading-none">
                             {{ config('site.hours.open') }} — {{ config('site.hours.close') }}

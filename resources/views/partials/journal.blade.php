@@ -6,7 +6,7 @@
         </div>
 
         <div class="mt-14 grid gap-16 lg:mt-20 lg:grid-cols-12 lg:gap-x-10">
-            @foreach (config('site.journal.articles') as $index => $article)
+            @foreach ($articles as $index => $article)
                 @php
                     $featured = $index === 0;
                     $wide = $featured ? 'lg:col-span-7' : 'lg:col-span-5';
