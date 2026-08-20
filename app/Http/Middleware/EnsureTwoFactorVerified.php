@@ -12,8 +12,10 @@ class EnsureTwoFactorVerified
     {
         $user = $request->user();
 
-        if ($user && $user->two_factor_enabled && ! session('two_factor_verified')) {
-            return redirect()->route('admin.two-factor.challenge');
+        if ($user && ! session('two_factor_verified')) {
+            return $user->two_factor_enabled
+                ? redirect()->route('admin.two-factor.challenge')
+                : redirect()->route('admin.two-factor.setup');
         }
 
         return $next($request);

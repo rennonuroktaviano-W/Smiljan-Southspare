@@ -66,9 +66,9 @@
             <h2 class="font-display text-[1.5rem]">Dua Faktor Autentikasi</h2>
             <p class="mt-2 text-[0.9rem] text-ink/70">
                 @if ($user->two_factor_enabled)
-                    <span class="text-wood">Aktif</span> — Akun Anda dilindungi dengan 2FA.
+                    <span class="text-wood">Aktif</span> — Akun Anda dilindungi dengan verifikasi dua langkah (wajib).
                 @else
-                    <span class="text-coffee">Nonaktif</span> — Tambahkan lapisan keamanan ekstra.
+                    <span class="text-coffee">Nonaktif</span> — Verifikasi dua langkah wajib diaktifkan untuk masuk.
                 @endif
             </p>
 
@@ -77,8 +77,8 @@
                     <a href="{{ route('admin.two-factor.setup') }}" class="link-line inline-flex items-center gap-3 font-mono text-[0.75rem] uppercase tracking-[0.26em]">
                         Aktifkan 2FA <span aria-hidden="true">→</span>
                     </a>
-                @else
-                    <form method="POST" action="{{ route('admin.two-factor.disable') }}" data-confirm="Nonaktifkan 2FA? Akun Anda akan kurang aman.">
+                @elseif (! config('admin.two_factor.required', true))
+                    <form method="POST" action="{{ route('admin.two-factor.disable') }}" data-confirm="Nonaktifkan 2FA? Login berikutnya akan memaksa Anda mengaktifkannya kembali.">
                         @csrf
                         @method('DELETE')
                         <div class="flex items-end gap-3">

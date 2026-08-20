@@ -12,7 +12,7 @@
     <table width="100%" cellpadding="0" cellspacing="0" style="margin:16px 0 24px;">
         <tr><td style="padding:12px 16px;background-color:#f9f7f3;border-left:3px solid #8a6d4b;">
             <p style="font-size:14px;color:#4a4740;margin:0 0 4px;"><strong>{{ $name }}</strong> &lt;{{ $email }}&gt;</p>
-            <p style="font-size:14px;line-height:1.7;color:#4a4740;margin:0;white-space:pre-line;">{{ $message }}</p>
+            <p style="font-size:14px;line-height:1.7;color:#4a4740;margin:0;white-space:pre-line;">{{ $body }}</p>
         </td></tr>
     </table>
     <p style="margin:0 0 32px;">

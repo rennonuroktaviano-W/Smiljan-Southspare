@@ -15,7 +15,7 @@ class ContactNotificationMail extends Mailable
     public function __construct(
         public string $name,
         public string $email,
-        public string $message,
+        public string $body,
     ) {}
 
     public function envelope(): Envelope
@@ -28,7 +28,7 @@ class ContactNotificationMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            htmlView: 'emails.contact-notification',
+            view: 'emails.contact-notification',
         );
     }
 }

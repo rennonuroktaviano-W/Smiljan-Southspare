@@ -32,6 +32,8 @@
             <form method="POST" action="{{ route('admin.authenticate') }}" class="mt-10" autocomplete="on">
                 @csrf
 
+                @include('partials.honeypot')
+
                 <div class="flex flex-col gap-7">
                     <div>
                         <label for="email" class="sr-only">Email</label>
@@ -64,12 +66,9 @@
                         >
                     </div>
 
-                    <div class="flex items-center justify-between">
-                        <label class="flex cursor-pointer items-center gap-2 text-[0.85rem] text-olive">
-                            <input type="checkbox" name="remember" value="1" class="accent-wood">
-                            Ingat saya
-                        </label>
-                    </div>
+                    <p class="text-[0.8rem] leading-relaxed text-olive">Setelah password benar, Anda harus menyelesaikan verifikasi dua langkah untuk masuk.</p>
+
+                    @include('partials.turnstile')
 
                     <button type="submit" class="link-line inline-flex w-fit items-center gap-3 font-mono text-[0.75rem] uppercase tracking-[0.26em]">
                         Masuk <span aria-hidden="true">→</span>

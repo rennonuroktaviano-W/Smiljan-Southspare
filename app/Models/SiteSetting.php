@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Cache;
 class SiteSetting extends Model
 {
     protected $fillable = ['section', 'value'];
+
     protected $casts = ['value' => 'array'];
 
     private static int $cacheTtl = 3600;

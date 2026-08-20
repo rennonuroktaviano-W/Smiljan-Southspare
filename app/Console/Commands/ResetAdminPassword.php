@@ -11,7 +11,9 @@ class ResetAdminPassword extends Command
 {
     protected $signature = 'admin:reset-password
                             {--email= : Email admin yang mau di-reset}
-                            {--password= : Password baru (kosongkan agar dibuat otomatis)}';
+                            {--password= : Password baru (kosongkan agar dibuat otomatis)}
+                            {--reset-2fa : Nonaktifkan 2FA + hapus secret & kode pemulihan}';
+
     protected $description = 'Generate password baru untuk admin, password lama otomatis expired';
 
     public function handle(): int
@@ -22,6 +24,7 @@ class ResetAdminPassword extends Command
 
         if (! $user) {
             $this->error("User dengan email '{$email}' tidak ditemukan.");
+
             return self::FAILURE;
         }
 
@@ -29,6 +32,7 @@ class ResetAdminPassword extends Command
 
         if (strlen($newPassword) < 8) {
             $this->error('Password baru minimal 8 karakter.');
+
             return self::FAILURE;
         }
 
@@ -36,6 +40,14 @@ class ResetAdminPassword extends Command
             'password' => Hash::make($newPassword),
             'remember_token' => null,
         ])->save();
+
+        if ($this->option('reset-2fa')) {
+            $user->forceFill([
+                'two_factor_enabled' => false,
+                'two_factor_secret' => null,
+                'two_factor_recovery_codes' => null,
+            ])->save();
+        }
 
         DB::table(config('auth.passwords.users.table'))
             ->where('email', $user->email)
@@ -45,18 +57,24 @@ class ResetAdminPassword extends Command
 
         if (! Hash::check($newPassword, $freshUser->password)) {
             $this->error('Gagal memverifikasi password baru. Silakan coba lagi.');
+
             return self::FAILURE;
         }
 
         $this->newLine();
-        $this->info("Password berhasil di-reset & terverifikasi!");
+        $this->info('Password berhasil di-reset & terverifikasi!');
         $this->newLine();
         $this->table(['Field', 'Value'], [
             ['Email', $user->email],
             ['Password Baru', $newPassword],
+            ['2FA', $freshUser->two_factor_enabled ? 'Masih aktif' : 'Nonaktif'],
         ]);
         $this->newLine();
         $this->warn('Password lama sudah tidak berlaku. Simpan password baru ini!');
+
+        if ($this->option('reset-2fa')) {
+            $this->warn('2FA dinonaktifkan & kode pemulihan dihapus. Login berikutnya akan memaksa setup ulang.');
+        }
 
         return self::SUCCESS;
     }

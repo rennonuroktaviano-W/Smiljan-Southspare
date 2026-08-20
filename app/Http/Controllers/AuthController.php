@@ -2,13 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Traits\HoneypotProtection;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\RateLimiter;
 
 class AuthController extends Controller
 {
+    use HoneypotProtection;
+
     public function login(): View
     {
         return view('admin.auth.login');
@@ -25,7 +29,37 @@ class AuthController extends Controller
             'password' => ['required', 'string'],
         ]);
 
-        if (! Auth::attempt($credentials, $request->boolean('remember'))) {
+        $lockoutKey = 'login-lockout:'.$request->input('email').'|'.$request->ip();
+        $maxAttempts = (int) config('admin.security.login_lockout_attempts', 5);
+        $lockoutMinutes = (int) config('admin.security.login_lockout_minutes', 15);
+
+        if (RateLimiter::tooManyAttempts($lockoutKey, $maxAttempts)) {
+            $minutes = (int) ceil(RateLimiter::availableIn($lockoutKey) / 60);
+
+            activity()
+                ->withProperties(['email' => $request->input('email'), 'ip' => $request->ip()])
+                ->event('login_locked')
+                ->log('Akun terkunci sementara karena terlalu banyak percobaan');
+
+            return back()
+                ->withErrors(['email' => 'Terlalu banyak percobaan login. Coba lagi dalam '.$minutes.' menit.'])
+                ->onlyInput('email');
+        }
+
+        if ($this->honeypotFilled($request)) {
+            activity()
+                ->withProperties(['email' => $request->input('email'), 'ip' => $request->ip()])
+                ->event('honeypot')
+                ->log('Bot terdeteksi pada form login');
+
+            return back()->withErrors([
+                'email' => 'Email atau kata sandi salah.',
+            ])->onlyInput('email');
+        }
+
+        if (! Auth::attempt($credentials)) {
+            RateLimiter::hit($lockoutKey, $lockoutMinutes * 60);
+
             activity()
                 ->withProperties(['email' => $request->input('email'), 'ip' => $request->ip()])
                 ->event('login_failed')
@@ -36,29 +70,20 @@ class AuthController extends Controller
             ])->onlyInput('email');
         }
 
+        RateLimiter::clear($lockoutKey);
+
         $user = Auth::user();
-
-        if ($user->two_factor_enabled) {
-            session(['two_factor_pending' => $user->id]);
-
-            activity()
-                ->performedOn($user)
-                ->event('login_2fa_pending')
-                ->withProperties(['ip' => $request->ip()])
-                ->log('Login menunggu verifikasi 2FA');
-
-            return redirect()->route('admin.two-factor.challenge');
-        }
-
-        $request->session()->regenerate();
+        session(['two_factor_pending' => $user->id]);
 
         activity()
             ->performedOn($user)
-            ->event('login')
-            ->withProperties(['ip' => $request->ip(), 'user_agent' => $request->userAgent()])
-            ->log('Login berhasil');
+            ->event('login_2fa_pending')
+            ->withProperties(['ip' => $request->ip()])
+            ->log('Login menunggu verifikasi 2FA');
 
-        return redirect()->intended(route('admin.dashboard'));
+        return $user->two_factor_enabled
+            ? redirect()->route('admin.two-factor.challenge')
+            : redirect()->route('admin.two-factor.setup');
     }
 
     public function logout(Request $request): RedirectResponse

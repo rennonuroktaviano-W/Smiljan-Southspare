@@ -19,6 +19,8 @@ class SecurityHeaders
         $response->headers->set('X-Content-Type-Options', 'nosniff');
         $response->headers->set('X-Frame-Options', 'SAMEORIGIN');
         $response->headers->set('X-XSS-Protection', '1; mode=block');
+        $response->headers->set('X-Permitted-Cross-Domain-Policies', 'none');
+        $response->headers->set('X-DNS-Prefetch-Control', 'off');
         $response->headers->set('Referrer-Policy', 'strict-origin-when-cross-origin');
         $response->headers->set('Cross-Origin-Opener-Policy', 'same-origin');
         $response->headers->set('Cross-Origin-Resource-Policy', 'same-origin');
@@ -44,18 +46,28 @@ class SecurityHeaders
             $response->headers->set('Strict-Transport-Security', 'max-age=63072000; includeSubDomains; preload');
         }
 
-        $fontSrc = config('app.env') === 'production'
-            ? 'https://fonts.bunny.net'
-            : 'https://fonts.bunny.net https://localhost:* http://localhost:*';
-        $connectSrc = config('app.env') === 'production'
-            ? "'self'"
-            : "'self' http://localhost:* https://localhost:*";
+        $dev = config('app.env') !== 'production';
+
+        $devOrigins = $dev
+            ? ' http://localhost:* https://localhost:* http://127.0.0.1:* https://127.0.0.1:* http://[::1]:* https://[::1]:*'
+            : '';
+
+        $turnstile = turnstileEnabled() ? 'https://challenges.cloudflare.com' : '';
+
+        $fontSrc = $dev ? "https://fonts.bunny.net{$devOrigins}" : 'https://fonts.bunny.net';
+        $connectSrc = $dev ? "'self'{$devOrigins}{$turnstile}" : "'self'{$turnstile}";
+        $scriptSrc = $dev ? "'self' 'nonce-{$nonce}'{$devOrigins}{$turnstile}" : "'self' 'nonce-{$nonce}'{$turnstile}";
+        $styleSrc = $dev ? "'self' 'unsafe-inline'{$devOrigins}{$turnstile}" : "'self' 'unsafe-inline'{$turnstile}";
+        $imgSrc = $dev ? "'self' data: blob: https:{$devOrigins}" : "'self' data: blob: https:";
+        $frameSrc = $turnstile !== '' ? "'self'{$turnstile}" : "'self'";
+
         $csp = "default-src 'self'; "
-            ."script-src 'self' 'nonce-{$nonce}'; "
-            ."style-src 'self' 'unsafe-inline'; "
-            ."img-src 'self' data: blob: https:; "
+            ."script-src {$scriptSrc}; "
+            ."style-src {$styleSrc}; "
+            ."img-src {$imgSrc}; "
             ."font-src 'self' {$fontSrc}; "
             ."connect-src {$connectSrc}; "
+            ."frame-src {$frameSrc}; "
             ."frame-ancestors 'self'; "
             ."base-uri 'self'; "
             ."form-action 'self';";

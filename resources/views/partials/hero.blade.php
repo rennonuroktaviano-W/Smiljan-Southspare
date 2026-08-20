@@ -28,6 +28,7 @@
                         fetchpriority="high"
                         decoding="async"
                     >
+                    <div class="hero-3d" data-coffee aria-hidden="true"></div>
                 </figure>
                 <figcaption class="mt-3 flex justify-between font-mono text-[0.58rem] uppercase tracking-[0.22em] text-olive">
                     <span>FIG. 00 — {{ siteSetting('brand', 'area') }}</span>

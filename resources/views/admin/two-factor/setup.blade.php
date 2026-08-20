@@ -4,6 +4,12 @@
 
 @section('content')
     <div class="max-w-lg">
+        @if ($forced)
+            <div class="mb-6 border border-coffee/30 bg-coffee/5 p-4 text-[0.85rem] text-coffee">
+                Verifikasi dua langkah wajib untuk masuk ke panel admin. Selesaikan langkah di bawah ini terlebih dahulu.
+            </div>
+        @endif
+
         <p class="text-[0.95rem] leading-relaxed text-ink/80">
             Pindai kode QR di bawah ini menggunakan aplikasi autentikator Anda (Google Authenticator, Authy, dll.), lalu masukkan kode 6 digit untuk mengaktifkan.
         </p>
@@ -21,7 +27,6 @@
 
         <form method="POST" action="{{ route('admin.two-factor.enable') }}" class="mt-8">
             @csrf
-            <input type="hidden" name="secret" value="{{ $secret }}">
 
             <div>
                 <label for="code" class="sr-only">Kode verifikasi</label>
@@ -36,10 +41,26 @@
                 <button type="submit" class="link-line inline-flex items-center gap-3 font-mono text-[0.75rem] uppercase tracking-[0.26em]">
                     Aktifkan 2FA <span aria-hidden="true">→</span>
                 </button>
+            </div>
+        </form>
+
+        <div class="mt-6 flex gap-4">
+            @if ($forced)
+                <form method="POST" action="{{ route('admin.logout') }}">
+                    @csrf
+                    <button type="submit" class="inline-flex items-center font-mono text-[0.7rem] uppercase tracking-[0.2em] text-olive hover:text-ink">
+                        Keluar
+                    </button>
+                </form>
+            @else
                 <a href="{{ route('admin.profile.edit') }}" class="inline-flex items-center font-mono text-[0.7rem] uppercase tracking-[0.2em] text-olive hover:text-ink">
                     Batal
                 </a>
-            </div>
-        </form>
+            @endif
+        </div>
+
+        <p class="mt-8 text-[0.8rem] text-ink/60">
+            Setelah diaktifkan, Anda akan melihat kode pemulihan. Simpan di tempat aman — kode ini satu-satunya cara masuk jika aplikasi autentikator tidak tersedia.
+        </p>
     </div>
 @endsection

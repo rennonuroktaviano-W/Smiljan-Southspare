@@ -18,7 +18,7 @@ class MessageTest extends TestCase
 
     public function test_index_returns_200(): void
     {
-        $response = $this->actingAs($this->user)->get(route('admin.messages.index'));
+        $response = $this->actingAsAdmin($this->user)->get(route('admin.messages.index'));
         $response->assertStatus(200);
     }
 
@@ -26,7 +26,7 @@ class MessageTest extends TestCase
     {
         $message = Message::factory()->create(['is_read' => false]);
 
-        $response = $this->actingAs($this->user)->post(route('admin.messages.read', $message));
+        $response = $this->actingAsAdmin($this->user)->post(route('admin.messages.read', $message));
         $response->assertRedirect();
         $this->assertDatabaseHas('messages', ['id' => $message->id, 'is_read' => true]);
     }
@@ -35,7 +35,7 @@ class MessageTest extends TestCase
     {
         $message = Message::factory()->create();
 
-        $response = $this->actingAs($this->user)->delete(route('admin.messages.destroy', $message));
+        $response = $this->actingAsAdmin($this->user)->delete(route('admin.messages.destroy', $message));
         $response->assertRedirect();
         $this->assertDatabaseMissing('messages', ['id' => $message->id]);
     }
@@ -45,7 +45,7 @@ class MessageTest extends TestCase
         Message::factory()->create(['name' => 'Budi']);
         Message::factory()->create(['name' => 'Ani']);
 
-        $response = $this->actingAs($this->user)->get(route('admin.messages.index', ['q' => 'Budi']));
+        $response = $this->actingAsAdmin($this->user)->get(route('admin.messages.index', ['q' => 'Budi']));
         $response->assertSee('Budi');
         $response->assertDontSee('Ani');
     }

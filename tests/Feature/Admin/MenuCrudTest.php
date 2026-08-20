@@ -18,13 +18,13 @@ class MenuCrudTest extends TestCase
 
     public function test_index_returns_200(): void
     {
-        $response = $this->actingAs($this->user)->get(route('admin.menu.index'));
+        $response = $this->actingAsAdmin($this->user)->get(route('admin.menu.index'));
         $response->assertStatus(200);
     }
 
     public function test_store_creates_menu_item(): void
     {
-        $response = $this->actingAs($this->user)->post(route('admin.menu.store'), [
+        $response = $this->actingAsAdmin($this->user)->post(route('admin.menu.store'), [
             'category' => 'Espresso',
             'name' => 'Americano',
             'description' => 'Black coffee',
@@ -39,7 +39,7 @@ class MenuCrudTest extends TestCase
     {
         $item = MenuItem::factory()->create();
 
-        $response = $this->actingAs($this->user)->delete(route('admin.menu.destroy', $item));
+        $response = $this->actingAsAdmin($this->user)->delete(route('admin.menu.destroy', $item));
         $response->assertRedirect(route('admin.menu.index'));
         $this->assertDatabaseMissing('menu_items', ['id' => $item->id]);
     }

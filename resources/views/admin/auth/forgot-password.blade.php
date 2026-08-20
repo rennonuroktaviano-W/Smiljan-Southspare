@@ -14,6 +14,8 @@
     <form method="POST" action="{{ route('admin.password.email') }}" class="mt-8">
         @csrf
 
+        @include('partials.honeypot')
+
         <div>
             <label for="email" class="sr-only">Email</label>
             <input id="email" name="email" type="email" value="{{ old('email') }}" placeholder="Email" required autofocus autocomplete="email"
@@ -22,6 +24,8 @@
                 <p class="mt-2 font-mono text-[0.62rem] uppercase tracking-[0.2em] text-coffee">{{ $message }}</p>
             @enderror
         </div>
+
+        @include('partials.turnstile')
 
         <button type="submit" class="mt-8 link-line inline-flex w-full justify-center items-center gap-3 font-mono text-[0.75rem] uppercase tracking-[0.26em]">
             Kirim tautan reset <span aria-hidden="true">→</span>

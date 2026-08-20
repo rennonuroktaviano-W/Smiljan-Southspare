@@ -18,13 +18,13 @@ class ArticleCrudTest extends TestCase
 
     public function test_index_returns_200(): void
     {
-        $response = $this->actingAs($this->user)->get(route('admin.articles.index'));
+        $response = $this->actingAsAdmin($this->user)->get(route('admin.articles.index'));
         $response->assertStatus(200);
     }
 
     public function test_create_form_returns_200(): void
     {
-        $response = $this->actingAs($this->user)->get(route('admin.articles.create'));
+        $response = $this->actingAsAdmin($this->user)->get(route('admin.articles.create'));
         $response->assertStatus(200);
     }
 
@@ -41,7 +41,7 @@ class ArticleCrudTest extends TestCase
             'content' => "First paragraph\n\nSecond paragraph",
         ];
 
-        $response = $this->actingAs($this->user)->post(route('admin.articles.store'), $data);
+        $response = $this->actingAsAdmin($this->user)->post(route('admin.articles.store'), $data);
         $response->assertRedirect(route('admin.articles.index'));
         $this->assertDatabaseHas('articles', ['title' => 'Test Article']);
     }
@@ -49,7 +49,7 @@ class ArticleCrudTest extends TestCase
     public function test_edit_form_returns_200(): void
     {
         $article = Article::factory()->create();
-        $response = $this->actingAs($this->user)->get(route('admin.articles.edit', $article));
+        $response = $this->actingAsAdmin($this->user)->get(route('admin.articles.edit', $article));
         $response->assertStatus(200);
     }
 
@@ -57,7 +57,7 @@ class ArticleCrudTest extends TestCase
     {
         $article = Article::factory()->create(['title' => 'Original']);
 
-        $response = $this->actingAs($this->user)->put(route('admin.articles.update', $article), [
+        $response = $this->actingAsAdmin($this->user)->put(route('admin.articles.update', $article), [
             'category' => 'Cerita',
             'meta' => '5 menit baca',
             'title' => 'Updated Title',
@@ -76,7 +76,7 @@ class ArticleCrudTest extends TestCase
     {
         $article = Article::factory()->create();
 
-        $response = $this->actingAs($this->user)->delete(route('admin.articles.destroy', $article));
+        $response = $this->actingAsAdmin($this->user)->delete(route('admin.articles.destroy', $article));
         $response->assertRedirect(route('admin.articles.index'));
         $this->assertDatabaseMissing('articles', ['id' => $article->id]);
     }
@@ -86,7 +86,7 @@ class ArticleCrudTest extends TestCase
         Article::factory()->create(['title' => 'Coffee Story']);
         Article::factory()->create(['title' => 'Book Review']);
 
-        $response = $this->actingAs($this->user)->get(route('admin.articles.index', ['q' => 'Coffee']));
+        $response = $this->actingAsAdmin($this->user)->get(route('admin.articles.index', ['q' => 'Coffee']));
         $response->assertSee('Coffee Story');
         $response->assertDontSee('Book Review');
     }

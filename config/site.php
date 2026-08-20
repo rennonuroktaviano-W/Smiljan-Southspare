@@ -27,7 +27,7 @@ return [
             'Cilandak Barat',
             'Jakarta Selatan',
         ],
-        'maps_url' => 'https://maps.google.com/?q=Jl.+BDN+1,+Cilandak+Barat,+Jakarta+Selatan',
+        'maps_url' => 'https://www.google.com/maps/place/Smiljan+Southspare/@-6.279791,106.7989644,17z/data=!3m1!4b1!4m6!3m5!1s0x2e69f100033e3b7d:0xd7296777ad54c268!8m2!3d-6.279791!4d106.7963895',
     ],
 
     'hours' => [
@@ -47,7 +47,7 @@ return [
 
     'social' => [
         'instagram' => 'https://www.instagram.com/',
-        'maps' => 'https://maps.google.com/?q=Jl.+BDN+1,+Cilandak+Barat,+Jakarta+Selatan',
+        'maps' => 'https://www.google.com/maps/place/Smiljan+Southspare/@-6.279791,106.7989644,17z/data=!3m1!4b1!4m6!3m5!1s0x2e69f100033e3b7d:0xd7296777ad54c268!8m2!3d-6.279791!4d106.7963895',
         'contact' => 'mailto:halo@smiljan.southspare',
     ],
 
@@ -319,7 +319,7 @@ return [
         'items' => [
             ['label' => 'EMAIL',     'value' => 'halo@smiljan.southspare', 'href' => 'mailto:halo@smiljan.southspare'],
             ['label' => 'INSTAGRAM', 'value' => '@smiljan.southspare',     'href' => 'https://www.instagram.com/'],
-            ['label' => 'ALAMAT',    'value' => 'Jl. BDN 1, Cilandak Barat', 'href' => 'https://maps.google.com/?q=Jl.+BDN+1,+Cilandak+Barat,+Jakarta+Selatan'],
+            ['label' => 'ALAMAT',    'value' => 'Jl. BDN 1, Cilandak Barat', 'href' => 'https://www.google.com/maps/place/Smiljan+Southspare/@-6.279791,106.7989644,17z/data=!3m1!4b1!4m6!3m5!1s0x2e69f100033e3b7d:0xd7296777ad54c268!8m2!3d-6.279791!4d106.7963895'],
         ],
         'note' => 'KAMI MEMBALAS PELAN-PELAN — BIASANYA DALAM 1—2 HARI',
     ],
@@ -328,7 +328,7 @@ return [
         'tagline' => 'COFFEE / BOOKS / PEOPLE / SOUTH JAKARTA',
         'links' => [
             ['label' => 'Instagram', 'href' => 'https://www.instagram.com/'],
-            ['label' => 'Maps',      'href' => 'https://maps.google.com/?q=Jl.+BDN+1,+Cilandak+Barat,+Jakarta+Selatan'],
+            ['label' => 'Maps',      'href' => 'https://www.google.com/maps/place/Smiljan+Southspare/@-6.279791,106.7989644,17z/data=!3m1!4b1!4m6!3m5!1s0x2e69f100033e3b7d:0xd7296777ad54c268!8m2!3d-6.279791!4d106.7963895'],
             ['label' => 'Kontak',    'href' => 'mailto:halo@smiljan.southspare'],
         ],
     ],

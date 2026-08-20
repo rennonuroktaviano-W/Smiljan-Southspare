@@ -35,4 +35,12 @@ return [
         ],
     ],
 
+    'turnstile' => [
+        'enabled' => (bool) env('TURNSTILE_ENABLED', false),
+        'site_key' => env('TURNSTILE_SITE_KEY'),
+        'secret_key' => env('TURNSTILE_SECRET_KEY'),
+        'verification_url' => env('TURNSTILE_VERIFY_URL', 'https://challenges.cloudflare.com/turnstile/v0/siteverify'),
+        'skip_local' => (bool) env('TURNSTILE_SKIP_LOCAL', true),
+    ],
+
 ];

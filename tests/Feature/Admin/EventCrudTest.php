@@ -18,13 +18,13 @@ class EventCrudTest extends TestCase
 
     public function test_index_returns_200(): void
     {
-        $response = $this->actingAs($this->user)->get(route('admin.events.index'));
+        $response = $this->actingAsAdmin($this->user)->get(route('admin.events.index'));
         $response->assertStatus(200);
     }
 
     public function test_store_creates_event(): void
     {
-        $response = $this->actingAs($this->user)->post(route('admin.events.store'), [
+        $response = $this->actingAsAdmin($this->user)->post(route('admin.events.store'), [
             'name' => 'Book Club',
             'description' => 'Weekly book discussion',
             'status' => 'Segera',
@@ -38,7 +38,7 @@ class EventCrudTest extends TestCase
     {
         $event = Event::factory()->create();
 
-        $response = $this->actingAs($this->user)->delete(route('admin.events.destroy', $event));
+        $response = $this->actingAsAdmin($this->user)->delete(route('admin.events.destroy', $event));
         $response->assertRedirect(route('admin.events.index'));
         $this->assertDatabaseMissing('events', ['id' => $event->id]);
     }

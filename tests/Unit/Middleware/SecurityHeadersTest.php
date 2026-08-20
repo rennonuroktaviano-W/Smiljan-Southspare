@@ -12,6 +12,8 @@ class SecurityHeadersTest extends TestCase
         $response = $this->get('/');
         $response->assertHeader('X-Content-Type-Options', 'nosniff');
         $response->assertHeader('X-Frame-Options', 'SAMEORIGIN');
+        $response->assertHeader('X-Permitted-Cross-Domain-Policies', 'none');
+        $response->assertHeader('X-DNS-Prefetch-Control', 'off');
         $response->assertHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
         $response->assertHeader('Cross-Origin-Opener-Policy', 'same-origin');
         $response->assertHeader('Cross-Origin-Resource-Policy', 'same-origin');
@@ -31,7 +33,7 @@ class SecurityHeadersTest extends TestCase
     public function test_admin_pages_have_no_cache_headers(): void
     {
         $user = User::factory()->create();
-        $response = $this->actingAs($user)->get('/admin');
+        $response = $this->actingAsAdmin($user)->get('/admin');
         $cacheControl = $response->headers->get('Cache-Control');
         $this->assertStringContainsString('no-store', $cacheControl);
         $this->assertStringContainsString('no-cache', $cacheControl);

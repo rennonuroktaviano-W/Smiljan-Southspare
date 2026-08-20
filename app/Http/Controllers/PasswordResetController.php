@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Traits\HoneypotProtection;
 use Illuminate\Auth\Events\PasswordReset as PasswordResetEvent;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
@@ -11,6 +12,8 @@ use Illuminate\Support\Str;
 
 class PasswordResetController extends Controller
 {
+    use HoneypotProtection;
+
     public function showForgotForm(): View
     {
         return view('admin.auth.forgot-password');
@@ -18,6 +21,15 @@ class PasswordResetController extends Controller
 
     public function sendResetLink(Request $request): RedirectResponse
     {
+        if ($this->honeypotFilled($request)) {
+            activity()
+                ->withProperties(['ip' => $request->ip()])
+                ->event('honeypot')
+                ->log('Bot terdeteksi pada form lupa password');
+
+            return back()->with('ok', 'Tautan reset password telah dikirim ke email Anda.');
+        }
+
         $request->validate(['email' => ['required', 'email']]);
 
         $status = Password::sendResetLink(
@@ -39,6 +51,10 @@ class PasswordResetController extends Controller
 
     public function reset(Request $request): RedirectResponse
     {
+        if ($this->honeypotFilled($request)) {
+            return back()->withErrors(['email' => 'Tautan reset tidak valid atau sudah kedaluwarsa.']);
+        }
+
         $request->merge([
             'email' => mb_strtolower(trim((string) $request->input('email'))),
         ]);

@@ -190,6 +190,12 @@ if (hero && !reducedMotion) {
         requestAnimationFrame(tick);
     };
     tick();
+
+    if (document.querySelector('[data-coffee]')) {
+        import('./coffee-cup.js')
+            .then(({ initCoffeeHero }) => initCoffeeHero(hero, { getProgress: () => progress }))
+            .catch(() => {});
+    }
 }
 
 // ---------------------------------------------------------------- 3D tilt on images

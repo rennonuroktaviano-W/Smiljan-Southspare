@@ -30,7 +30,7 @@ Route::get('/tentang', fn () => view('about'))->name('about');
 
 Route::get('/kontak', ContactController::class)->name('contact');
 Route::post('/kontak', [ContactController::class, 'store'])
-    ->middleware('throttle:10,1')
+    ->middleware(['throttle:10,1', 'turnstile'])
     ->name('contact.store');
 
 Route::get('/sitemap.xml', function () {
@@ -43,15 +43,17 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::middleware('guest')->group(function () {
         Route::get('/login', [AuthController::class, 'login'])->name('login');
         Route::post('/login', [AuthController::class, 'authenticate'])
-            ->middleware('throttle:login')
+            ->middleware(['throttle:login', 'turnstile'])
             ->name('authenticate');
 
         Route::get('/forgot-password', [PasswordResetController::class, 'showForgotForm'])->name('password.request');
         Route::post('/forgot-password', [PasswordResetController::class, 'sendResetLink'])
-            ->middleware('throttle:5,1')
+            ->middleware(['throttle:5,1', 'turnstile'])
             ->name('password.email');
         Route::get('/reset-password/{token}', [PasswordResetController::class, 'showResetForm'])->name('password.reset');
-        Route::post('/reset-password', [PasswordResetController::class, 'reset'])->name('password.update');
+        Route::post('/reset-password', [PasswordResetController::class, 'reset'])
+            ->middleware('turnstile')
+            ->name('password.update');
     });
 
     Route::middleware('auth')->group(function () {
@@ -61,9 +63,23 @@ Route::prefix('admin')->name('admin.')->group(function () {
             ->withoutMiddleware([EnsureTwoFactorVerified::class])
             ->name('two-factor.challenge');
         Route::post('/two-factor/verify', [TwoFactorController::class, 'verify'])
-            ->middleware('throttle:two_factor')
+            ->middleware(['throttle:two_factor', 'turnstile'])
             ->withoutMiddleware([EnsureTwoFactorVerified::class])
             ->name('two-factor.verify');
+
+        Route::get('/two-factor/setup', [TwoFactorController::class, 'showSetup'])
+            ->withoutMiddleware([EnsureTwoFactorVerified::class])
+            ->name('two-factor.setup');
+        Route::post('/two-factor/enable', [TwoFactorController::class, 'enable'])
+            ->middleware('throttle:two_factor')
+            ->withoutMiddleware([EnsureTwoFactorVerified::class])
+            ->name('two-factor.enable');
+        Route::get('/two-factor/recovery', [TwoFactorController::class, 'showRecovery'])
+            ->withoutMiddleware([EnsureTwoFactorVerified::class])
+            ->name('two-factor.recovery');
+        Route::post('/two-factor/recovery/confirm', [TwoFactorController::class, 'confirmRecovery'])
+            ->withoutMiddleware([EnsureTwoFactorVerified::class])
+            ->name('two-factor.recovery.confirm');
 
         Route::middleware('two_factor')->group(function () {
             Route::middleware('throttle:admin')->group(function () {
@@ -89,8 +105,6 @@ Route::prefix('admin')->name('admin.')->group(function () {
                 Route::get('settings/{section}/edit', [SiteSettingController::class, 'edit'])->name('settings.edit');
                 Route::put('settings/{section}', [SiteSettingController::class, 'update'])->name('settings.update');
 
-                Route::get('two-factor', [TwoFactorController::class, 'showSetup'])->name('two-factor.setup');
-                Route::post('two-factor/enable', [TwoFactorController::class, 'enable'])->name('two-factor.enable');
                 Route::delete('two-factor', [TwoFactorController::class, 'disable'])->name('two-factor.disable');
             });
         });

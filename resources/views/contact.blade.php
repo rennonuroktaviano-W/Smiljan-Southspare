@@ -49,6 +49,8 @@
                     <form method="POST" action="{{ route('contact.store') }}" class="border-t pt-6 hairline" data-reveal>
                         @csrf
 
+                        @include('partials.honeypot')
+
                         <p class="font-mono text-[0.6rem] uppercase tracking-[0.24em] text-olive">Tinggalkan pesan</p>
 
                         @if (session('sent'))
@@ -106,6 +108,8 @@
                                     <p class="mt-2 font-mono text-[0.62rem] uppercase tracking-[0.2em] text-coffee">{{ $message }}</p>
                                 @enderror
                             </div>
+
+                            @include('partials.turnstile')
 
                             <button type="submit" class="link-line inline-flex w-fit items-center gap-3 font-mono text-[0.75rem] uppercase tracking-[0.26em]" data-magnetic>
                                 Kirim pesan <span aria-hidden="true">→</span>
