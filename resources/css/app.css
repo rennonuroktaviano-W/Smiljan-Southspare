@@ -638,4 +638,28 @@
     .back-to-top:hover {
         background: var(--color-wood);
     }
+
+    /* ---------- cookie consent banner ---------- */
+    .cookie-consent {
+        position: fixed;
+        bottom: 1.5rem;
+        left: 1.5rem;
+        z-index: 40;
+        max-width: 24rem;
+        background: var(--color-ink);
+        color: var(--color-paper);
+        border: 1px solid rgba(244, 240, 231, 0.14);
+        padding: 1.25rem;
+        opacity: 0;
+        transform: translateY(16px);
+        transition:
+            opacity 0.45s var(--ease),
+            transform 0.45s var(--ease);
+        pointer-events: none;
+    }
+    .cookie-consent.is-visible {
+        opacity: 1;
+        transform: none;
+        pointer-events: auto;
+    }
 }

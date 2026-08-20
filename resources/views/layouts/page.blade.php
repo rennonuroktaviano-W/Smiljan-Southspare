@@ -29,5 +29,7 @@
         </main>
 
         @include('partials.footer')
+
+        @include('partials.cookie-consent')
     </body>
 </html>

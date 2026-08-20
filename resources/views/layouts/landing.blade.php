@@ -49,6 +49,8 @@
 
         @include('partials.footer')
 
+        @include('partials.cookie-consent')
+
         <button type="button" class="back-to-top" aria-label="Kembali ke atas" data-cursor>↑</button>
     </body>
 </html>

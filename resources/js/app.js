@@ -296,6 +296,34 @@ if (backToTop) {
     });
 }
 
+// ---------------------------------------------------------------- cookie consent
+const cookieConsent = document.getElementById('cookie-consent');
+
+if (cookieConsent) {
+    const setConsent = (value) => {
+        const secure = location.protocol === 'https:' ? '; Secure' : '';
+        document.cookie = `cookie_consent=${value}; path=/; max-age=31536000; SameSite=Lax${secure}`;
+        cookieConsent.classList.remove('is-visible');
+        setTimeout(() => cookieConsent.remove(), 400);
+    };
+
+    const hasConsent = document.cookie
+        .split(';')
+        .some((c) => c.trim().startsWith('cookie_consent='));
+
+    if (!hasConsent) {
+        cookieConsent.hidden = false;
+        requestAnimationFrame(() => cookieConsent.classList.add('is-visible'));
+    }
+
+    cookieConsent
+        .querySelector('[data-cookie-accept]')
+        ?.addEventListener('click', () => setConsent('accepted'));
+    cookieConsent
+        .querySelector('[data-cookie-decline]')
+        ?.addEventListener('click', () => setConsent('rejected'));
+}
+
 // ---------------------------------------------------------------- admin flash dismiss
 document.querySelectorAll('.flash-msg').forEach((el) => {
     const dismiss = () => {
